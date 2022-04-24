@@ -26,6 +26,10 @@ def get_date(request, date):
         return JsonResponse({'error': 'Invalid date'})
     date_info = datetime.date(numbers[0], numbers[1], numbers[2])
     date_info_string = date_info.strftime('%a %b %d %Y')
+    try:
+        unix_time = int(time.mktime(date_info.timetuple())*1000)
+    except OverflowError:
+        return JsonResponse({ 'error': 'Year overflow' })
     unix_time = int(time.mktime(date_info.timetuple())*1000)
     return JsonResponse({ 
         'time': '{}'.format(date_info_string),
